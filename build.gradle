@@ -1,0 +1,44 @@
+group 'telegrambot'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.3'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.drinksunibot.Application'
+    }
+    baseName = 'all-in-one-jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+dependencies {
+
+    // telegram
+    compile group: 'org.telegram', name: 'telegrambotsextensions', version: '3.6'
+    compile group: 'com.vdurmont', name: 'emoji-java', version: '4.0.0'
+
+    // spring
+    compile group: 'org.springframework', name: 'spring-context', version: '5.0.4.RELEASE'
+
+    // persistance
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.6.3'
+    compile group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.0.5.RELEASE'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
